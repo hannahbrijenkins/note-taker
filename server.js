@@ -4,9 +4,10 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const path = require('path');
 const fs = require('fs');
-const notes = require('./Develop/db/db.json')
+const { notes } = require('./Develop/db/db.json')
 const uuid = require('uuid');
-const { runInNewContext } = require('vm');
+// const { runInNewContext } = require('vm');
+
 
 // body parser middleware
 app.use(express.json());
@@ -26,8 +27,12 @@ app.get('/notes', (req, res) => {
 });
 
 app.get('/api/notes', (req, res) => {
-    res.json(notes)
+    res.send(notes)
 });
+
+getTitleInput = () => {
+
+}
 
 // creates a new note to array
 app.post('/api/notes', (req, res) => {
@@ -40,6 +45,8 @@ app.post('/api/notes', (req, res) => {
 
     if(!newNote.title || !newNote.text) {
         res.status(400).json({ msg: 'Please include a name and email'});
+    } else {
+        res.status(200).json()
     }
 
     notes.push(newNote);
