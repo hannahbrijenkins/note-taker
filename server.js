@@ -27,6 +27,7 @@ app.get('/api/notes', (req, res) =>{
     res.json(notes);
 })
 
+// function to create new note and push to array
 function createNewNote(body, notesArray) {
     const note = body;
     notesArray.push(note);
@@ -37,13 +38,29 @@ function createNewNote(body, notesArray) {
     return note;
 }
 
-// creates a new task
+// gives note an id, respinds with json of new note
 app.post('/api/notes', (req, res) => {
+    // sets id
     req.body.id = notes.length.toString();
-    const note = createNewNote(req.body, notes);
-    
-    res.json(req.body); 
+
+    // validation
+    if (!validateNote(req.body)) {
+        res.status(400).send('The note is not properly formatted. Please make sure all fields are filled.');
+    } else {
+        const note = createNewNote(req.body, notes);
+        res.json(req.body); 
+    }
 });
+
+function validateNote(note) {
+    if (!note.title || typeof note.title !== 'string') {
+        return false;
+    }
+    if (!note.text || typeof note.text !== 'string') {
+        return false;
+    }
+    return true;
+}
 
 // activates app
 app.listen(PORT, () => {
