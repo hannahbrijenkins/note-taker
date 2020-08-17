@@ -5,6 +5,7 @@ const app = express();
 const path = require('path');
 const uuid = require('uuid');
 const { notes } = require('./Develop/db/db.json');
+const fs = require('fs');
 
 // parse incoming string or array data
 app.use(express.urlencoded({ extended: true }));
@@ -25,11 +26,25 @@ app.get('/notes', (req, res) => {
 app.get('/api/notes', (req, res) =>{
     res.json(notes);
 })
-// // creates a new task
-// app.post('/api/notes'), (req, res) => {
-//     console.log(req.body);
-//     res.jsob(req.body); 
-// }
+
+
+function createNewNote(body, notesArray) {
+    const notes = body;
+    notesArray.push(notes);
+    fs.writeFileSync(
+        patj.join(__dirname, './Develop/db/db.json'),
+        JSON.stringify({ notes: notesArray}, null, 2)
+    );
+    return notes;
+}
+
+// creates a new task
+app.post('/api/notes', (req, res) => {
+    const notes = createNewNote(req.body, notes);
+    req.body.id = notes.length.toString();
+    
+    res.json(req.body); 
+});
 
 // activates app
 app.listen(PORT, () => {
