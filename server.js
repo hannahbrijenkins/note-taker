@@ -27,21 +27,20 @@ app.get('/api/notes', (req, res) =>{
     res.json(notes);
 })
 
-
 function createNewNote(body, notesArray) {
-    const notes = body;
-    notesArray.push(notes);
+    const note = body;
+    notesArray.push(note);
     fs.writeFileSync(
-        patj.join(__dirname, './Develop/db/db.json'),
-        JSON.stringify({ notes: notesArray}, null, 2)
+        path.join(__dirname, 'Develop/db/db.json'),
+        JSON.stringify({notes:notesArray}, null, 2)
     );
-    return notes;
+    return note;
 }
 
 // creates a new task
 app.post('/api/notes', (req, res) => {
-    const notes = createNewNote(req.body, notes);
     req.body.id = notes.length.toString();
+    const note = createNewNote(req.body, notes);
     
     res.json(req.body); 
 });
