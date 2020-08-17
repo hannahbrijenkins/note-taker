@@ -1,23 +1,35 @@
-// create port, import express
+// create port, import express, path, uuid
 const PORT = process.env.PORT || 3001;
 const express = require('express');
 const app = express();
 const path = require('path');
+const uuid = require('uuid');
+const { notes } = require('./Develop/db/db.json');
 
 // parse incoming string or array data
 app.use(express.urlencoded({ extended: true }));
 // parse incoming JSON data
 app.use(express.json());
-// static function
+// static function to get bootstrap and jquery
 app.use(express.static('Develop/public'));
 
+// recieves index.html file + notes.html to server
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, './Develop/public/index.html'));
 });
-
 app.get('/notes', (req, res) => {
     res.sendFile(path.join(__dirname, './Develop/public/notes.html'));
 });
+
+// get api
+app.get('/api/notes', (req, res) =>{
+    res.json(notes);
+})
+// // creates a new task
+// app.post('/api/notes'), (req, res) => {
+//     console.log(req.body);
+//     res.jsob(req.body); 
+// }
 
 // activates app
 app.listen(PORT, () => {
